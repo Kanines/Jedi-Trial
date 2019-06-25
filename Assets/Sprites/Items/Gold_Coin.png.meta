@@ -26,6 +26,30 @@ TextureImporter:
   - first:
       213: -7330613914589520971
     second: Coin_Gold_7
+  - first:
+      213: 4282135639742286997
+    second: Gold_Coin_0
+  - first:
+      213: 8333994207780694499
+    second: Gold_Coin_1
+  - first:
+      213: -3858689996452300991
+    second: Gold_Coin_2
+  - first:
+      213: -7024867543826385829
+    second: Gold_Coin_3
+  - first:
+      213: 3091291935962203253
+    second: Gold_Coin_4
+  - first:
+      213: -4267911549379529679
+    second: Gold_Coin_5
+  - first:
+      213: -1129887520072985557
+    second: Gold_Coin_6
+  - first:
+      213: -7501928197797883012
+    second: Gold_Coin_7
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -66,7 +90,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 32
@@ -130,7 +154,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Coin_Gold_0
+      name: Gold_Coin_0
       rect:
         serializedVersion: 2
         x: 0
@@ -144,14 +168,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dbf156588ee7a8f4ba1e89a2090a2fff
-      internalID: -6474822756817492616
+      spriteID: db8d4fab8cd706a418ffebed082e1a54
+      internalID: 4282135639742286997
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Coin_Gold_1
+      name: Gold_Coin_1
       rect:
         serializedVersion: 2
         x: 32
@@ -165,14 +189,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 91289edaca8a4f84491aecd1ffce14a2
-      internalID: 6484842713631769387
+      spriteID: 4fa326bc54649674da91e9b90bc4e942
+      internalID: 8333994207780694499
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Coin_Gold_2
+      name: Gold_Coin_2
       rect:
         serializedVersion: 2
         x: 64
@@ -186,14 +210,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bf12a95447551ea4fa19504e17c3c5c0
-      internalID: 1820391419752784192
+      spriteID: f302acac7b864864aa56900e940de8a2
+      internalID: -3858689996452300991
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Coin_Gold_3
+      name: Gold_Coin_3
       rect:
         serializedVersion: 2
         x: 96
@@ -207,14 +231,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cdda22652501791418ede4af97b608e3
-      internalID: 8337165407846463788
+      spriteID: 8d506e5f8378bd24199b842d82a831c2
+      internalID: -7024867543826385829
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Coin_Gold_4
+      name: Gold_Coin_4
       rect:
         serializedVersion: 2
         x: 128
@@ -228,14 +252,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3546b23cdbd898e439219b2f2c8a9aee
-      internalID: -2841743897929430558
+      spriteID: ec02a26e7f1d03a4a899638193c7465b
+      internalID: 3091291935962203253
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Coin_Gold_5
+      name: Gold_Coin_5
       rect:
         serializedVersion: 2
         x: 160
@@ -249,14 +273,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d34a1a15bbaef9847bbcedd12f44ff42
-      internalID: 6112275366150372859
+      spriteID: 79e2aa633439ae6499418ebaf91c4f4d
+      internalID: -4267911549379529679
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Coin_Gold_6
+      name: Gold_Coin_6
       rect:
         serializedVersion: 2
         x: 192
@@ -270,14 +294,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a5d75cf8638b6504291438dd589f2f1d
-      internalID: 5241814996248873556
+      spriteID: b57b35e691d43624498e59d5b4c0c6db
+      internalID: -1129887520072985557
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Coin_Gold_7
+      name: Gold_Coin_7
       rect:
         serializedVersion: 2
         x: 224
@@ -291,8 +315,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4fdbb351bdd68264c858d2c169885437
-      internalID: -7330613914589520971
+      spriteID: c0556d615a398864daa1668e07b0f1dd
+      internalID: -7501928197797883012
       vertices: []
       indices: 
       edges: []
