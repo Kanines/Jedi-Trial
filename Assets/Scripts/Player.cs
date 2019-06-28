@@ -4,25 +4,29 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private Rigidbody2D _rigid;
     [SerializeField]
     private float _jumpForce = 5.0f;
-    private bool _resetJump = false;
     [SerializeField]
     private float _horizSpeed = 5.0f;
+    private bool _resetJump = false;
+    private bool _isGrounded = false;
 
-    private PlayerAnimation _anim;
+    private Rigidbody2D _rigid;
+    private PlayerAnimation _playerAnim;
+    private SpriteRenderer _playerSprite;
 
     // Start is called before the first frame update
     void Start()
     {
         _rigid = GetComponent<Rigidbody2D>();
-        _anim = GetComponent<PlayerAnimation>();
+        _playerAnim = GetComponent<PlayerAnimation>();
+        _playerSprite = GetComponentInChildren<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        Debug.DrawRay(transform.position, Vector2.down * 1.05f, Color.red);
         Movement();
     }
 
@@ -31,28 +35,42 @@ public class Player : MonoBehaviour
         // Horizontal Movement
         float horizInput = Input.GetAxisRaw("Horizontal");
 
+        _isGrounded = IsGrounded();
+
+        if (horizInput > 0)
+        {
+            _playerSprite.flipX = false;
+        }
+        else if (horizInput < 0)
+        {
+            _playerSprite.flipX = true;
+        }
         // Jump
-        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
+        if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
         {
             _rigid.velocity = new Vector2(_rigid.velocity.x, _jumpForce);
             StartCoroutine(ResetJumpRoutine());
+            _playerAnim.Jump(true);
         }
 
         _rigid.velocity = new Vector2(horizInput * _horizSpeed, _rigid.velocity.y);
 
-        _anim.Move(horizInput);
+        _playerAnim.Move(horizInput);
     }
 
     bool IsGrounded()
     {
         RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.down, 1.05f, 1 << 8);
-        //Debug.DrawRay(transform.position, Vector2.down * 1.05f, Color.red);
 
         if (hitInfo.collider != null)
         {
             //Debug.Log(hitInfo.collider.name);
             if (_resetJump == false)
+            {
+                Debug.Log("Grounded");
+                _playerAnim.Jump(false);
                 return true;
+            }
         }
 
         return false;
@@ -61,7 +79,7 @@ public class Player : MonoBehaviour
     IEnumerator ResetJumpRoutine()
     {
         _resetJump = true;
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.5f);
         _resetJump = false;
     }
 }

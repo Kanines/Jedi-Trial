@@ -1,25 +1,13 @@
 fileFormatVersion: 2
-guid: 5ed0d63a809dba74bbfd76ef4b1bb3a0
+guid: 7d65fa34fb7d68c49a66d3d3f42c0bda
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2860516238012164513
-    second: Jedi_Idle_0
+      213: 7460046300004610927
+    second: Jump_0
   - first:
-      213: -694520615245381423
-    second: Jedi_Idle_1
-  - first:
-      213: -3906187014119846676
-    second: Jedi_Idle_2
-  - first:
-      213: -8449996764947223002
-    second: Jedi_Idle_3
-  - first:
-      213: -3831709632988608400
-    second: Jedi_Idle_4
-  - first:
-      213: 214322572947434694
-    second: Jedi_Idle_5
+      213: 7034338576483803127
+    second: Jump_1
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -124,43 +112,43 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Jedi_Idle_0
+      name: Jump_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 3
+        x: 7
+        y: 7
         width: 35
-        height: 53
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        height: 55
+      alignment: 6
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6abb32cb07349664987b13c5fd8346e6
-      internalID: -2860516238012164513
+      spriteID: c9859add9f92e274e911967b5e6e7cee
+      internalID: 7460046300004610927
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Jedi_Idle_1
+      name: Jump_1
       rect:
         serializedVersion: 2
-        x: 41
-        y: 3
+        x: 45
+        y: 7
         width: 35
-        height: 53
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        height: 55
+      alignment: 6
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7495f08de69fcfd4d963618d17056822
-      internalID: -694520615245381423
+      spriteID: c258279d8aad36b46accfe3e9824bf39
+      internalID: 7034338576483803127
       vertices: []
       indices: 
       edges: []
@@ -168,7 +156,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: ca1872380d0737d48bd5ff9cf6932e5f
+    spriteID: 617344264416b3b499d11f05be32755d
     internalID: 0
     vertices: []
     indices: 
