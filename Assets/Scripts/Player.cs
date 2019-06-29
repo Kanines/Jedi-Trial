@@ -39,11 +39,21 @@ public class Player : MonoBehaviour
 
         if (horizInput > 0)
         {
-            _playerSprite.flipX = false;
+            if (_playerSprite.flipX)
+            {
+                _playerSprite.flipX = false;
+                _playerSprite.transform.position = new Vector3(_playerSprite.transform.position.x - _playerSprite.sprite.bounds.size.x,
+                    _playerSprite.transform.position.y, _playerSprite.transform.position.z);
+            }
         }
         else if (horizInput < 0)
         {
-            _playerSprite.flipX = true;
+            if (_playerSprite.flipX == false)
+            {
+                _playerSprite.flipX = true;
+                _playerSprite.transform.position = new Vector3(_playerSprite.transform.position.x + _playerSprite.sprite.bounds.size.x,
+                    _playerSprite.transform.position.y, _playerSprite.transform.position.z);
+            }
         }
         // Jump
         if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
