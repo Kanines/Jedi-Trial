@@ -1,25 +1,13 @@
 fileFormatVersion: 2
-guid: 5ed0d63a809dba74bbfd76ef4b1bb3a0
+guid: 44716241b53f61b4ab5c57257e31c37e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2860516238012164513
-    second: Jedi_Idle_0
+      213: 2537882373423050008
+    second: Block_0
   - first:
-      213: -694520615245381423
-    second: Jedi_Idle_1
-  - first:
-      213: -3906187014119846676
-    second: Jedi_Idle_2
-  - first:
-      213: -8449996764947223002
-    second: Jedi_Idle_3
-  - first:
-      213: -3831709632988608400
-    second: Jedi_Idle_4
-  - first:
-      213: 214322572947434694
-    second: Jedi_Idle_5
+      213: 2189487477073400709
+    second: Block_1
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -124,13 +112,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Jedi_Idle_0
+      name: Block_0
       rect:
         serializedVersion: 2
         x: 4
-        y: 3
-        width: 35
-        height: 53
+        y: 2
+        width: 33
+        height: 70
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -138,20 +126,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a7463c0c45db7e747a5ea5f1b11708e0
-      internalID: -2860516238012164513
+      spriteID: 65552e4995fb8f14bba7d4b034a74bcb
+      internalID: 2537882373423050008
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Jedi_Idle_1
+      name: Block_1
       rect:
         serializedVersion: 2
-        x: 41
-        y: 3
-        width: 35
-        height: 53
+        x: 39
+        y: 2
+        width: 33
+        height: 70
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -159,8 +147,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bd09e5d91e26f1a4594b807ba955098e
-      internalID: -694520615245381423
+      spriteID: e161c0f82b0f8c34faf351dfb7a04996
+      internalID: 2189487477073400709
       vertices: []
       indices: 
       edges: []
@@ -168,7 +156,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: ca1872380d0737d48bd5ff9cf6932e5f
+    spriteID: 3105ebf609a16a043a2cff27dbc6c0ba
     internalID: 0
     vertices: []
     indices: 

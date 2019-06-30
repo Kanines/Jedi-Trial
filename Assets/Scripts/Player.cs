@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     private float _horizSpeed = 5.0f;
     private bool _resetJump = false;
     private bool _isGrounded = false;
+    private bool _isBlocking = false;
 
     private Rigidbody2D _rigid;
     private PlayerAnimation _playerAnim;
@@ -28,6 +29,22 @@ public class Player : MonoBehaviour
     {
         Debug.DrawRay(transform.position, Vector2.down * 1.05f, Color.red);
         Movement();
+
+        if (Input.GetMouseButtonDown(0) && IsGrounded())
+        {
+            _playerAnim.Attack();
+        }
+
+        if (Input.GetMouseButtonDown(1) && IsGrounded() && !_isBlocking)
+        {
+            _playerAnim.Block(true);
+            _isBlocking = true;
+        }
+        else if(Input.GetMouseButtonUp(1))
+        {
+            _playerAnim.Block(false);
+            _isBlocking = false;
+        }
     }
 
     void Movement()

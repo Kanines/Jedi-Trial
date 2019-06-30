@@ -1,25 +1,55 @@
 fileFormatVersion: 2
-guid: d041282610aae6d458d9a3d861233cbc
+guid: 44b3c0746309b22448435805ecac887d
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3377682450106305695
-    second: Jedi_Idle2_0
+      213: 6992015659157496711
+    second: Jedi_Run_0
   - first:
-      213: -764052873993355546
-    second: Jedi_Idle2_1
+      213: -4540173805245327920
+    second: Jedi_Run_1
   - first:
-      213: -3412613371673996486
-    second: Jedi_Idle2_2
+      213: 3267811743779608879
+    second: Jedi_Run_2
   - first:
-      213: 396909093766530734
-    second: Jedi_Idle2_3
+      213: 7055635489633560799
+    second: Jedi_Run_3
   - first:
-      213: 4664570191669908345
-    second: Jedi_Idle2_4
+      213: -8947748075277911132
+    second: Jedi_Run_4
   - first:
-      213: -4501578961745970591
-    second: Jedi_Idle2_5
+      213: 3422828950574458015
+    second: Jedi_Run_5
+  - first:
+      213: 1638934143263590207
+    second: Jedi_Run_6
+  - first:
+      213: -3885936860354832602
+    second: Jedi_Run_7
+  - first:
+      213: 4944230376442633554
+    second: Run_0
+  - first:
+      213: -2274363484027164459
+    second: Run_1
+  - first:
+      213: 8284087734974297348
+    second: Run_2
+  - first:
+      213: 5304202850863732263
+    second: Run_3
+  - first:
+      213: 2833043080597125133
+    second: Run_4
+  - first:
+      213: -2217414122262695004
+    second: Run_5
+  - first:
+      213: -4440497016933152808
+    second: Run_6
+  - first:
+      213: 8676454946275842879
+    second: Run_7
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -124,13 +154,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Jedi_Idle2_0
+      name: Run_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 3
-        width: 35
-        height: 53
+        x: 1
+        y: 6
+        width: 37
+        height: 58
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -138,20 +168,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5b678c06cb9c256498065632a3d3058c
-      internalID: -3377682450106305695
+      spriteID: 0a1923ee076710a40aaa2104273effa6
+      internalID: 4944230376442633554
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Jedi_Idle2_1
+      name: Run_1
       rect:
         serializedVersion: 2
-        x: 41
-        y: 3
-        width: 35
-        height: 53
+        x: 40
+        y: 6
+        width: 45
+        height: 48
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -159,20 +189,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 93f19e8d890538541a4976ff4e1e2d2a
-      internalID: -764052873993355546
+      spriteID: b5e382b7a7a2c4a4591c54e7974c167c
+      internalID: -2274363484027164459
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Jedi_Idle2_2
+      name: Run_2
       rect:
         serializedVersion: 2
-        x: 78
-        y: 3
-        width: 35
-        height: 53
+        x: 86
+        y: 6
+        width: 46
+        height: 57
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -180,20 +210,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e18af27b4237d3146aeb374e0a63df05
-      internalID: -3412613371673996486
+      spriteID: 0c30fbcde03b7e745abdd28e21afbd7f
+      internalID: 8284087734974297348
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Jedi_Idle2_3
+      name: Run_3
       rect:
         serializedVersion: 2
-        x: 114
-        y: 3
-        width: 35
-        height: 53
+        x: 134
+        y: 6
+        width: 40
+        height: 66
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -201,20 +231,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0ac7498c4615c3947bda957136684e09
-      internalID: 396909093766530734
+      spriteID: f7216cfcee2249449b3440bc2d02fd64
+      internalID: 5304202850863732263
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Jedi_Idle2_4
+      name: Run_4
       rect:
         serializedVersion: 2
-        x: 149
-        y: 3
-        width: 35
-        height: 53
+        x: 176
+        y: 6
+        width: 27
+        height: 76
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -222,20 +252,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 31447bdfae357104b84b0af4a5605d81
-      internalID: 4664570191669908345
+      spriteID: 42d8b47ceb65305438121d2f7a7dd7b3
+      internalID: 2833043080597125133
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Jedi_Idle2_5
+      name: Run_5
       rect:
         serializedVersion: 2
-        x: 185
-        y: 3
-        width: 35
-        height: 53
+        x: 213
+        y: 6
+        width: 33
+        height: 74
       alignment: 6
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -243,8 +273,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e0bce27479db0394dbefda64cdd4b147
-      internalID: -4501578961745970591
+      spriteID: 65d57cdc851c52146b814252e44eb250
+      internalID: -2217414122262695004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Run_6
+      rect:
+        serializedVersion: 2
+        x: 252
+        y: 6
+        width: 29
+        height: 74
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bfc02d4dd182ab54fa50ceaf524051a2
+      internalID: -4440497016933152808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Run_7
+      rect:
+        serializedVersion: 2
+        x: 292
+        y: 6
+        width: 32
+        height: 60
+      alignment: 6
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1c2484c5616a4241996bc22c7627fa7
+      internalID: 8676454946275842879
       vertices: []
       indices: 
       edges: []
@@ -252,7 +324,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: c3438c9f58017d24cad766a331ed5e11
+    spriteID: 450cf5d7052efa94d90b4128448b0add
     internalID: 0
     vertices: []
     indices: 
