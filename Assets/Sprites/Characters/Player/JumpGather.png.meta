@@ -5,6 +5,9 @@ TextureImporter:
   - first:
       213: 1688641373159507562
     second: GatherJump_0
+  - first:
+      213: -1207414057711039460
+    second: JumpGather_0
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -109,7 +112,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: GatherJump_0
+      name: JumpGather_0
       rect:
         serializedVersion: 2
         x: 2
@@ -123,8 +126,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 38d9e9f35ca098247833d486b413772a
-      internalID: 1688641373159507562
+      spriteID: 9dc0592b64b0c824c958fc02ed362b4f
+      internalID: -1207414057711039460
       vertices: []
       indices: 
       edges: []
