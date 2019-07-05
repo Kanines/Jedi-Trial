@@ -15,9 +15,9 @@ TagManager:
   - 
   - 
   - Ground
-  - Cameras
-  - Hitbox Collision
-  - 
+  - Camera
+  - Player
+  - Sword
   - 
   - 
   - 
