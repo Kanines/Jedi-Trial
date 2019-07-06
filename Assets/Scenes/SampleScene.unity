@@ -665,7 +665,7 @@ GameObject:
   - component: {fileID: 704301109}
   m_Layer: 10
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -746,6 +746,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _jumpForce: 7
   _horizSpeed: 6
+  horizInput: 0
 --- !u!114 &704301109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9286,7 +9287,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -9350,9 +9351,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18a3a10fd07232245b4feafa16a48199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
+  health: 3
   speed: 3
-  rewardPoints: 0
+  rewardPoints: 5
   pointA: {fileID: 772525123}
   pointB: {fileID: 1906165164}
 --- !u!1 &1855573417

@@ -11,17 +11,18 @@ public class Player : MonoBehaviour
     private bool _resetJump = false;
     private bool _isGrounded = false;
     private bool _isBlocking = false;
-
     private Rigidbody2D _rigid;
     private PlayerAnimation _playerAnim;
-    private SpriteRenderer _playerSprite;
+    private SpriteRenderer _sprite;
+    private Vector3 _mainSpriteSize;
 
     // Start is called before the first frame update
     void Start()
     {
         _rigid = GetComponent<Rigidbody2D>();
         _playerAnim = GetComponent<PlayerAnimation>();
-        _playerSprite = GetComponentInChildren<SpriteRenderer>();
+        _sprite = GetComponentInChildren<SpriteRenderer>();
+        _mainSpriteSize = _sprite.sprite.bounds.size;
     }
 
     // Update is called once per frame
@@ -40,7 +41,7 @@ public class Player : MonoBehaviour
             _playerAnim.Block(true);
             _isBlocking = true;
         }
-        else if(Input.GetMouseButtonUp(1))
+        else if (Input.GetMouseButtonUp(1))
         {
             _playerAnim.Block(false);
             _isBlocking = false;
@@ -56,20 +57,18 @@ public class Player : MonoBehaviour
 
         if (horizInput > 0)
         {
-            if (_playerSprite.flipX)
+            if (_sprite.flipX)
             {
-                _playerSprite.flipX = false;
-                _playerSprite.transform.position = new Vector3(_playerSprite.transform.position.x - _playerSprite.sprite.bounds.size.x,
-                    _playerSprite.transform.position.y, _playerSprite.transform.position.z);
+                _sprite.flipX = false;
+                _sprite.transform.Translate(-_mainSpriteSize.x, 0, 0);
             }
         }
         else if (horizInput < 0)
         {
-            if (_playerSprite.flipX == false)
+            if (_sprite.flipX == false)
             {
-                _playerSprite.flipX = true;
-                _playerSprite.transform.position = new Vector3(_playerSprite.transform.position.x + _playerSprite.sprite.bounds.size.x,
-                    _playerSprite.transform.position.y, _playerSprite.transform.position.z);
+                _sprite.flipX = true;
+                _sprite.transform.Translate(_mainSpriteSize.x, 0, 0);
             }
         }
         // Jump
@@ -91,10 +90,8 @@ public class Player : MonoBehaviour
 
         if (hitInfo.collider != null)
         {
-            //Debug.Log(hitInfo.collider.name);
             if (_resetJump == false)
             {
-                Debug.Log("Grounded");
                 _playerAnim.Jump(false);
                 return true;
             }
