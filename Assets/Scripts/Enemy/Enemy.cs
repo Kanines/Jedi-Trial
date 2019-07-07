@@ -18,6 +18,7 @@ public abstract class Enemy : MonoBehaviour
     protected bool isHit = false;
     protected Player player;
     private Vector3 _mainSpriteSize;
+    private bool _isFlipped = false;
 
     private void Start()
     {
@@ -45,23 +46,15 @@ public abstract class Enemy : MonoBehaviour
 
     public virtual void Movement()
     {
-        if (pathTarget == pointA.position)
+        Vector3 pathTargetDirection = pathTarget - transform.localPosition;
+
+        if (pathTargetDirection.x > 0 && anim.GetBool("InCombat") == false)
         {
-            if (sprite.flipX == false)
-            {
-                sprite.flipX = true;
-                sprite.transform.position = new Vector3(sprite.transform.position.x - sprite.sprite.bounds.size.x,
-                        sprite.transform.position.y, sprite.transform.position.z);
-            }
+            FlipX(true);
         }
-        else
+        else if (pathTargetDirection.x < 0 && anim.GetBool("InCombat") == false)
         {
-            if (sprite.flipX)
-            {
-                sprite.flipX = false;
-                sprite.transform.position = new Vector3(sprite.transform.position.x + sprite.sprite.bounds.size.x,
-                        sprite.transform.position.y, sprite.transform.position.z);
-            }
+            FlipX(false);
         }
 
         if (transform.position == pointA.transform.position)
@@ -80,16 +73,44 @@ public abstract class Enemy : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, pathTarget, speed * Time.deltaTime);
         }
 
-        float distance = Vector3.Distance(transform.position, player.transform.position);
-        if (distance <= 10.0f)
-        {
-            Debug.Log("Distance to " + this.name + " is: " + distance);
-        }
-
-        if (distance > 2.0f)
+        // melee
+        float playerDistance = Vector3.Distance(transform.position, player.transform.position);
+        if (playerDistance > 4.0f)
         {
             isHit = false;
             anim.SetBool("InCombat", false);
+        }
+
+        Vector3 playerDirection = player.transform.localPosition - transform.localPosition;
+        if (playerDirection.x > 0 && anim.GetBool("InCombat"))
+        {
+            FlipX(true);
+        }
+        else if (playerDirection.x < 0 && anim.GetBool("InCombat"))
+        {
+            FlipX(false);
+        }
+    }
+
+    public virtual void FlipX(bool state)
+    {
+        if (state)
+        {
+            sprite.flipX = true;
+            if (_isFlipped == false)
+            {
+                sprite.transform.Translate(-_mainSpriteSize.x, 0, 0);
+                _isFlipped = true;
+            }
+        }
+        else
+        {
+            sprite.flipX = false;
+            if (_isFlipped)
+            {
+                sprite.transform.Translate(_mainSpriteSize.x, 0, 0);
+                _isFlipped = false;
+            }
         }
     }
 }

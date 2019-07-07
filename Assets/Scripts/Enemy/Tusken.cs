@@ -18,7 +18,7 @@ public class Tusken : Enemy, IDamageable
         anim.SetTrigger("Hit");
         anim.SetBool("InCombat", true);
         
-        Debug.Log(this.name + " obtained " + damageAmount + " damage!");
+        Debug.Log(this.name + " obtained " + damageAmount + " damage! Health: " + Health);
         Health -= damageAmount;
 
         if (Health < 1)

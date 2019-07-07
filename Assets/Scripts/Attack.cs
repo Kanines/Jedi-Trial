@@ -8,7 +8,7 @@ public class Attack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Hit: " + other.name);
+        //Debug.Log("Hit: " + other.name);
 
         IDamageable hit = other.GetComponent<IDamageable>();
 
@@ -22,7 +22,7 @@ public class Attack : MonoBehaviour
 
     IEnumerator ResetDamage()
     {
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.5f);
         _canDamage = true;        
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
     [SerializeField]
     private float _jumpForce = 5.0f;
@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
     private PlayerAnimation _playerAnim;
     private SpriteRenderer _sprite;
     private Vector3 _mainSpriteSize;
+
+    public int Health { get; set; }
 
     // Start is called before the first frame update
     void Start()
@@ -105,5 +107,11 @@ public class Player : MonoBehaviour
         _resetJump = true;
         yield return new WaitForSeconds(0.5f);
         _resetJump = false;
+    }
+
+    public void Damage(int damageAmount)
+    {
+        Debug.Log(this.name + " obtained " + damageAmount + " damage! Health: " + Health);
+        Health -= damageAmount;
     }
 }

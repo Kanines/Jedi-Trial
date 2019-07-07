@@ -17,9 +17,9 @@ TagManager:
   - Ground
   - Camera
   - Player
-  - Sword
-  - 
-  - 
+  - PlayerAttack
+  - Enemy
+  - EnemyAttack
   - 
   - 
   - 
