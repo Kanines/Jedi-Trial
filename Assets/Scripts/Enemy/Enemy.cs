@@ -17,8 +17,9 @@ public abstract class Enemy : MonoBehaviour
     protected SpriteRenderer sprite;
     protected bool isHit = false;
     protected Player player;
-    private Vector3 _mainSpriteSize;
-    private bool _isFlipped = false;
+    protected bool isDead;
+    protected Vector3 mainSpriteSize;
+    protected bool isFlipped = false;
 
     private void Start()
     {
@@ -30,7 +31,7 @@ public abstract class Enemy : MonoBehaviour
     {
         anim = GetComponentInChildren<Animator>();
         sprite = GetComponentInChildren<SpriteRenderer>();
-        _mainSpriteSize = sprite.sprite.bounds.size;
+        mainSpriteSize = sprite.sprite.bounds.size;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
 
@@ -41,7 +42,10 @@ public abstract class Enemy : MonoBehaviour
             return;
         }
 
-        Movement();
+        if (isDead == false)
+        {
+            Movement();
+        }
     }
 
     public virtual void Movement()
@@ -97,19 +101,19 @@ public abstract class Enemy : MonoBehaviour
         if (state)
         {
             sprite.flipX = true;
-            if (_isFlipped == false)
+            if (isFlipped == false)
             {
-                sprite.transform.Translate(-_mainSpriteSize.x, 0, 0);
-                _isFlipped = true;
+                sprite.transform.Translate(-mainSpriteSize.x, 0, 0);
+                isFlipped = true;
             }
         }
         else
         {
             sprite.flipX = false;
-            if (_isFlipped)
+            if (isFlipped)
             {
-                sprite.transform.Translate(_mainSpriteSize.x, 0, 0);
-                _isFlipped = false;
+                sprite.transform.Translate(mainSpriteSize.x, 0, 0);
+                isFlipped = false;
             }
         }
     }
