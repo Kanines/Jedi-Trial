@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerAnimation : MonoBehaviour
 {
-    private Animator _anim;
+    protected Animator _anim;
 
     // Start is called before the first frame update
     void Start()
@@ -30,5 +30,10 @@ public class PlayerAnimation : MonoBehaviour
     public void Block(bool blocking)
     {
         _anim.SetBool("Blocking", blocking);
+    }
+
+    public void Death()
+    {
+        _anim.SetTrigger("Death");
     }
 }

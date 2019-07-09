@@ -5,6 +5,8 @@ using UnityEngine;
 public class Player : MonoBehaviour, IDamageable
 {
     [SerializeField]
+    private int _health;
+    [SerializeField]
     private float _jumpForce = 5.0f;
     [SerializeField]
     private float _horizSpeed = 5.0f;
@@ -15,6 +17,8 @@ public class Player : MonoBehaviour, IDamageable
     private PlayerAnimation _playerAnim;
     private SpriteRenderer _sprite;
     private Vector3 _mainSpriteSize;
+    private Color _hitColor = new Color(1.0f, 0.7f, 0.1f, 1.0f);
+    private bool _isDead = false;
 
     public int Health { get; set; }
 
@@ -25,12 +29,17 @@ public class Player : MonoBehaviour, IDamageable
         _playerAnim = GetComponent<PlayerAnimation>();
         _sprite = GetComponentInChildren<SpriteRenderer>();
         _mainSpriteSize = _sprite.sprite.bounds.size;
+        Health = _health;
     }
 
     // Update is called once per frame
     void Update()
     {
         Debug.DrawRay(transform.position, Vector2.down * 1.05f, Color.red);
+
+        if (_isDead)
+            return;
+
         Movement();
 
         if (Input.GetMouseButtonDown(0) && IsGrounded())
@@ -102,16 +111,44 @@ public class Player : MonoBehaviour, IDamageable
         return false;
     }
 
+    public void Damage(int damageAmount)
+    {
+        if (_isDead)
+            return;
+
+        if (_isBlocking == false)
+        {
+            Debug.Log(this.name + " obtained " + damageAmount + " damage! Health: " + Health);
+            Health -= damageAmount;
+            StartCoroutine(HitFxRoutine());
+
+            if (Health < 1)
+            {
+                _isDead = true;
+                if (_sprite.flipX == false)
+                {
+                    _sprite.transform.Translate(_mainSpriteSize.x / 2, 0, 0);
+                }
+                else
+                {
+                    _sprite.transform.Translate(-_mainSpriteSize.x / 2, 0, 0);
+                }
+                _playerAnim.Death();
+            }
+        }
+    }
+
+    IEnumerator HitFxRoutine()
+    {
+        _sprite.color = _hitColor;
+        yield return new WaitForSeconds(0.25f);
+        _sprite.color = Color.white;
+    }
+
     IEnumerator ResetJumpRoutine()
     {
         _resetJump = true;
         yield return new WaitForSeconds(0.5f);
         _resetJump = false;
-    }
-
-    public void Damage(int damageAmount)
-    {
-        Debug.Log(this.name + " obtained " + damageAmount + " damage! Health: " + Health);
-        Health -= damageAmount;
     }
 }

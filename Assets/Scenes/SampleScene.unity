@@ -837,6 +837,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d16acc44f9c61be4c86ee6d749dc14a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _health: 5
   _jumpForce: 7
   _horizSpeed: 6
 --- !u!114 &704301109
@@ -9443,7 +9444,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18a3a10fd07232245b4feafa16a48199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 30000
+  health: 3
   speed: 3
   rewardPoints: 5
   pointA: {fileID: 772525123}

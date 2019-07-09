@@ -26,7 +26,6 @@ public class Tusken : Enemy, IDamageable
 
         if (Health < 1)
         {
-
             isDead = true;
             if (isFlipped == false)
             {
@@ -36,8 +35,8 @@ public class Tusken : Enemy, IDamageable
             {
                 sprite.transform.Translate(mainSpriteSize.x / 2, 0, 0);
             }
-
             anim.SetTrigger("Death");
+
             StartCoroutine(VanishCorpse());
         }
     }
