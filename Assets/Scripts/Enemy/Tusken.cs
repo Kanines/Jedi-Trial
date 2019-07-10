@@ -33,7 +33,7 @@ public class Tusken : Enemy, IDamageable
             }
             else
             {
-                sprite.transform.Translate(mainSpriteSize.x / 2, 0, 0);
+                sprite.transform.Translate(-mainSpriteSize.x / 2, 0, 0);
             }
             anim.SetTrigger("Death");
 

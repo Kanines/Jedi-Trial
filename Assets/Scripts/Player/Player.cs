@@ -19,6 +19,7 @@ public class Player : MonoBehaviour, IDamageable
     private Vector3 _mainSpriteSize;
     private Color _hitColor = new Color(1.0f, 0.7f, 0.1f, 1.0f);
     private bool _isDead = false;
+    private bool _isFlipped = false;
 
     public int Health { get; set; }
 
@@ -68,18 +69,20 @@ public class Player : MonoBehaviour, IDamageable
 
         if (horizInput > 0)
         {
-            if (_sprite.flipX)
+            if (_isFlipped)
             {
-                _sprite.flipX = false;
+                _isFlipped = false;
+                _sprite.transform.rotation = Quaternion.Euler(0, 0, 0);
                 _sprite.transform.Translate(-_mainSpriteSize.x, 0, 0);
             }
         }
         else if (horizInput < 0)
         {
-            if (_sprite.flipX == false)
+            if (_isFlipped == false)
             {
-                _sprite.flipX = true;
-                _sprite.transform.Translate(_mainSpriteSize.x, 0, 0);
+                _isFlipped = true;
+                _sprite.transform.rotation = Quaternion.Euler(0, 180, 0);
+                _sprite.transform.Translate(-_mainSpriteSize.x, 0, 0);
             }
         }
         // Jump
@@ -125,13 +128,13 @@ public class Player : MonoBehaviour, IDamageable
             if (Health < 1)
             {
                 _isDead = true;
-                if (_sprite.flipX == false)
+                if (_isFlipped == false)
                 {
                     _sprite.transform.Translate(_mainSpriteSize.x / 2, 0, 0);
                 }
                 else
                 {
-                    _sprite.transform.Translate(-_mainSpriteSize.x / 2, 0, 0);
+                    _sprite.transform.Translate(_mainSpriteSize.x / 2, 0, 0);
                 }
                 _playerAnim.Death();
             }

@@ -96,24 +96,24 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    public virtual void FlipX(bool state)
+    public virtual void FlipX(bool flip)
     {
-        if (state)
+        if (flip)
         {
-            sprite.flipX = true;
             if (isFlipped == false)
             {
-                sprite.transform.Translate(-mainSpriteSize.x, 0, 0);
                 isFlipped = true;
+                sprite.transform.rotation = Quaternion.Euler(0, 180, 0);
+                sprite.transform.Translate(mainSpriteSize.x, 0, 0);
             }
         }
         else
         {
-            sprite.flipX = false;
             if (isFlipped)
             {
-                sprite.transform.Translate(mainSpriteSize.x, 0, 0);
                 isFlipped = false;
+                sprite.transform.rotation = Quaternion.Euler(0, 0, 0);
+                sprite.transform.Translate(mainSpriteSize.x, 0, 0);
             }
         }
     }
