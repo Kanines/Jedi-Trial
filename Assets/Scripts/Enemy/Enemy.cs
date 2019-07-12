@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour
 {
+    public GameObject coinGoldPrefab;
     [SerializeField]
     protected int health;
     [SerializeField]

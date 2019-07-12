@@ -36,7 +36,7 @@ public class Tusken : Enemy, IDamageable
                 sprite.transform.Translate(-mainSpriteSize.x / 2, 0, 0);
             }
             anim.SetTrigger("Death");
-
+            Instantiate(coinGoldPrefab, transform.position, Quaternion.identity);
             StartCoroutine(VanishCorpse());
         }
     }

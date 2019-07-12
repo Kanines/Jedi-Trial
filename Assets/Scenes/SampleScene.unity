@@ -837,7 +837,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d16acc44f9c61be4c86ee6d749dc14a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 5
+  score: 0
+  _health: 500
   _jumpForce: 7
   _horizSpeed: 6
 --- !u!114 &704301109
@@ -9360,9 +9361,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1488752643}
+  - component: {fileID: 1488752644}
   - component: {fileID: 1488752642}
   - component: {fileID: 1488752641}
-  - component: {fileID: 1488752644}
   m_Layer: 12
   m_Name: Tusken_Enemy
   m_TagString: Untagged
@@ -9444,6 +9445,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18a3a10fd07232245b4feafa16a48199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coinGoldPrefab: {fileID: 5223785562359584088, guid: e3e8bd79f5221b94faa472383f998713,
+    type: 3}
   health: 3
   speed: 3
   rewardPoints: 5

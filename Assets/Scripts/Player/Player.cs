@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour, IDamageable
 {
+    public int score;
     [SerializeField]
     private int _health;
     [SerializeField]
