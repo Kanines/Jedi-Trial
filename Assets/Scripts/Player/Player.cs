@@ -124,6 +124,7 @@ public class Player : MonoBehaviour, IDamageable
         {
             Debug.Log(this.name + " obtained " + damageAmount + " damage! Health: " + Health);
             Health -= damageAmount;
+            UIManager.Instance.UpdateHealth(Health);
             StartCoroutine(HitFxRoutine());
 
             if (Health < 1)
