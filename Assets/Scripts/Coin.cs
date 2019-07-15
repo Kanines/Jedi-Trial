@@ -13,7 +13,7 @@ public class Coin : MonoBehaviour
             Player player = other.GetComponent<Player>();
             if (player != null)
             {
-                player.score += scorePoints;
+                player.AddScore(scorePoints);
                 Destroy(this.gameObject);
             }
         }

@@ -143,6 +143,12 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
+    public void AddScore(int scorePoints)
+    {
+        score += scorePoints;
+        UIManager.Instance.UpdateScore(score);
+    }
+
     IEnumerator HitFxRoutine()
     {
         _sprite.color = _hitColor;

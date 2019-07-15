@@ -26,6 +26,7 @@ public class UIManager : MonoBehaviour
     public Sprite healthUnitSprite;
     public Sprite healthUnitMissingSprite;
     public Image[] healthBar;
+    public Text scoreText;
 
     public void UpdateHealth(int remainingHealth)
     {
@@ -40,5 +41,10 @@ public class UIManager : MonoBehaviour
                 healthBar[i].sprite = healthUnitMissingSprite;
             }
         }
+    }
+
+    public void UpdateScore(int score)
+    {
+        scoreText.text = "" + score;
     }
 }
