@@ -20,7 +20,10 @@ public abstract class Enemy : MonoBehaviour
     protected Player player;
     protected bool isDead;
     protected Vector3 mainSpriteSize;
-    protected bool isFlipped = false;
+    public bool isFlipped = false;
+    public bool canAttack = true;
+    protected float attackCooldown = 2.0f;
+    public bool isChasing = false;
 
     private void Start()
     {
@@ -62,36 +65,76 @@ public abstract class Enemy : MonoBehaviour
             FlipX(false);
         }
 
-        if (transform.position == pointA.transform.position)
+        if (transform.position == pointA.transform.position && anim.GetBool("InCombat") == false)
         {
             pathTarget = pointB.position;
             anim.SetTrigger("Idle");
         }
-        else if (transform.position == pointB.transform.position)
+        else if (transform.position == pointB.transform.position && anim.GetBool("InCombat") == false)
         {
             pathTarget = pointA.position;
             anim.SetTrigger("Idle");
         }
 
-        if (isHit == false)
+        if (anim.GetBool("InCombat") == false)
         {
             transform.position = Vector3.MoveTowards(transform.position, pathTarget, speed * Time.deltaTime);
         }
 
         // melee
         float playerDistance = Vector3.Distance(transform.position, player.transform.position);
-        if (playerDistance > 4.0f)
+        Vector3 playerDirection = player.transform.localPosition - transform.localPosition;
+
+        if (playerDistance <= 1.5f && isChasing)
         {
-            isHit = false;
-            anim.SetBool("InCombat", false);
+            if (anim.GetBool("InCombat") == false)
+                anim.SetBool("InCombat", true);
+
+            if (canAttack)
+            {
+                canAttack = false;
+                anim.SetTrigger("Attack");
+                StartCoroutine(ResetAttackCooldown());
+            }
+        }
+        else if (playerDistance > 1.5f && playerDistance <= 5.0f
+                && ((isFlipped == false && playerDirection.x < 0) || (isFlipped && playerDirection.x > 0)))
+        {
+            if (anim.GetBool("InCombat"))
+                anim.SetBool("InCombat", false);
+
+            isChasing = true;
+            //isHit = false;        
+            pathTarget = player.transform.position;
+        }
+        else
+        {
+            if (anim.GetBool("InCombat"))
+                anim.SetBool("InCombat", false);
+            
+            if(isChasing)
+            {            
+                isChasing = false;
+
+                float pointADist = Vector3.Distance(transform.position, pointA.position);
+                float pointBDist = Vector3.Distance(transform.position, pointB.position);
+
+                if (pointADist < pointBDist)
+                {
+                    pathTarget = pointA.position;
+                }
+                else
+                {
+                    pathTarget = pointB.position;
+                }  
+            }                       
         }
 
-        Vector3 playerDirection = player.transform.localPosition - transform.localPosition;
-        if (playerDirection.x > 0 && anim.GetBool("InCombat"))
+        if (playerDirection.x > 0 && isChasing)
         {
             FlipX(true);
         }
-        else if (playerDirection.x < 0 && anim.GetBool("InCombat"))
+        else if (playerDirection.x < 0 && isChasing)
         {
             FlipX(false);
         }
@@ -117,5 +160,11 @@ public abstract class Enemy : MonoBehaviour
                 sprite.transform.Translate(mainSpriteSize.x, 0, 0);
             }
         }
+    }
+
+    IEnumerator ResetAttackCooldown()
+    {
+        yield return new WaitForSeconds(attackCooldown);
+        canAttack = true;
     }
 }
