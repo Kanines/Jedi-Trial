@@ -27,17 +27,7 @@ public class Tusken : Enemy, IDamageable
         if (Health < 1)
         {
             isDead = true;
-            if (isFlipped == false)
-            {
-                sprite.transform.Translate(-mainSpriteSize.x / 2, 0, 0);
-            }
-            else
-            {
-                sprite.transform.Translate(-mainSpriteSize.x / 2, 0, 0);
-            }
-            anim.SetTrigger("Death");
-            Instantiate(coinGoldPrefab, transform.position, Quaternion.identity);
-            StartCoroutine(VanishCorpse());
+            StartCoroutine(Death());
         }
     }
 
@@ -45,5 +35,21 @@ public class Tusken : Enemy, IDamageable
     {
         yield return new WaitForSeconds(5.0f);
         Destroy(this.gameObject);
+    }
+
+    IEnumerator Death()
+    {
+        yield return new WaitForSeconds(0.2f);
+        if (isFlipped == false)
+        {
+            sprite.transform.Translate(-mainSpriteSize.x / 2, 0, 0);
+        }
+        else
+        {
+            sprite.transform.Translate(-mainSpriteSize.x / 2, 0, 0);
+        }
+        anim.SetTrigger("Death");
+        Instantiate(coinGoldPrefab, transform.position, Quaternion.identity);
+        StartCoroutine(VanishCorpse());
     }
 }
