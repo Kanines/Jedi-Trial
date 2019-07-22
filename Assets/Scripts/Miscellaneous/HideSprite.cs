@@ -2,7 +2,7 @@
 
 public class HideSprite : MonoBehaviour
 {
-    void Start()
+    void Awake()
     {
         this.GetComponent<SpriteRenderer>().enabled = false;
     }
