@@ -19,7 +19,7 @@ public class PlayerAnimation : MonoBehaviour
 
     public void Jump(bool jumping)
     {
-        _anim.SetBool("Jumping", jumping);
+        _anim.SetBool("isJumping", jumping);
     }
 
     public void Attack()
@@ -29,7 +29,7 @@ public class PlayerAnimation : MonoBehaviour
 
     public void Block(bool blocking)
     {
-        _anim.SetBool("Blocking", blocking);
+        _anim.SetBool("isBlocking", blocking);
     }
 
     public void Death()

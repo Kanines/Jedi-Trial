@@ -16704,16 +16704,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18a3a10fd07232245b4feafa16a48199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinGoldPrefab: {fileID: 5223785562359584088, guid: e3e8bd79f5221b94faa472383f998713,
+  dropPrefab: {fileID: 5223785562359584088, guid: e3e8bd79f5221b94faa472383f998713,
     type: 3}
-  health: 3
+  _health: 500
   speed: 3
   rewardPoints: 5
-  pointA: {fileID: 772525123}
-  pointB: {fileID: 1906165164}
-  isFlipped: 0
-  canAttack: 1
-  isChasing: 0
+  attackCooldown: 2
+  damage: 1
+  pathPoints:
+  - {fileID: 1906165164}
+  - {fileID: 772525123}
 --- !u!1 &1543971971
 GameObject:
   m_ObjectHideFlags: 0

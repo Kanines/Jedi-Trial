@@ -2,167 +2,238 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour, IDamageable
 {
-    public GameObject coinGoldPrefab;
     [SerializeField]
-    protected int health;
+    protected GameObject dropPrefab;
+    [SerializeField]
+    private int _health;
     [SerializeField]
     protected int speed;
     [SerializeField]
     protected int rewardPoints;
     [SerializeField]
-    protected Transform pointA, pointB;
-    protected Vector3 pathTarget;
-    protected Animator anim;
+    protected float attackCooldown = 1.5f;
+    [SerializeField]
+    protected int damage = 1;
+    [SerializeField]
+    protected Transform[] pathPoints;
+    protected Animator animator;
     protected SpriteRenderer sprite;
-    protected bool isHit = false;
-    protected Player player;
-    protected bool isDead;
     protected Vector3 mainSpriteSize;
-    public bool isFlipped = false;
-    public bool canAttack = true;
-    protected float attackCooldown = 2.0f;
-    public bool isChasing = false;
+    protected bool isFacingRight = false;
+    protected AIState aiState = AIState.Guard;
+    protected Vector3 travelTarget;
+    protected Player player;
+    protected bool canAttack = true;
+    protected int currentPathPointIdx;
+    protected GameObject target;
+    protected Vector3 playerHeading;
+    protected float playerDistance;
+    protected Vector3 playerDirection;
+    protected float viewDistance = 6.0f;
+    protected float viewDistanceSquare;
+    protected float attackRange = 1.5f;
+    protected float attackRangeSquare;
+    protected float chaseDistance = 8.0f;
+    protected float chaseDistanceSquare;
+
+    public int Health
+    {
+        get { return _health; }
+        set { _health = value; }
+    }
 
     private void Start()
     {
         Init();
-        pathTarget = pointA.position;
     }
 
     public virtual void Init()
     {
-        anim = GetComponentInChildren<Animator>();
+        animator = GetComponentInChildren<Animator>();
         sprite = GetComponentInChildren<SpriteRenderer>();
-        mainSpriteSize = sprite.sprite.bounds.size;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        mainSpriteSize = sprite.sprite.bounds.size;
+
+        if (pathPoints.Length > 0)
+        {
+            currentPathPointIdx = 0;
+            travelTarget = pathPoints[currentPathPointIdx].position;
+        }
+
+        viewDistanceSquare = viewDistance * viewDistance;
+        attackRangeSquare = attackRange * attackRange;
+        chaseDistanceSquare = chaseDistance * chaseDistance;
     }
 
     public virtual void Update()
     {
-        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Idle") && anim.GetBool("InCombat") == false)
+        // if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+        // {
+        //     return;
+        // }
+
+        if (aiState == AIState.Dead)
         {
             return;
         }
 
-        if (isDead == false)
+        playerHeading = player.transform.position - transform.position;
+
+        switch (aiState)
         {
-            Movement();
+            case AIState.Guard:
+                Roam();
+                break;
+            case AIState.Combat:
+                Chase();
+                break;
         }
     }
 
-    public virtual void Movement()
+    protected abstract void Chase();
+
+    protected virtual void Roam()
     {
-        Vector3 pathTargetDirection = pathTarget - transform.localPosition;
+        animator.SetBool("isMoving", true);
 
-        if (pathTargetDirection.x > 0 && anim.GetBool("InCombat") == false)
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
-            FlipX(true);
-        }
-        else if (pathTargetDirection.x < 0 && anim.GetBool("InCombat") == false)
-        {
-            FlipX(false);
+
+            return;
         }
 
-        if (transform.position == pointA.transform.position && anim.GetBool("InCombat") == false)
+        HeadTowardsTarget(travelTarget);
+
+        if (Utils.isNear(transform.position, travelTarget))
         {
-            pathTarget = pointB.position;
-            anim.SetTrigger("Idle");
-        }
-        else if (transform.position == pointB.transform.position && anim.GetBool("InCombat") == false)
-        {
-            pathTarget = pointA.position;
-            anim.SetTrigger("Idle");
+            NextTravelPoint();
+            animator.SetTrigger("Idle");
         }
 
-        if (anim.GetBool("InCombat") == false)
+        travelTarget.y = transform.position.y;
+        transform.position = Vector3.MoveTowards(transform.position, travelTarget, speed * Time.deltaTime);
+
+        // check if enemy can see player
+        if (playerHeading.x > 0 && isFacingRight)
         {
-            transform.position = Vector3.MoveTowards(transform.position, pathTarget, speed * Time.deltaTime);
-        }
-
-        // melee
-        float playerDistance = Vector3.Distance(transform.position, player.transform.position);
-        Vector3 playerDirection = player.transform.localPosition - transform.localPosition;
-
-        if (playerDistance <= 1.5f && isChasing)
-        {
-            if (anim.GetBool("InCombat") == false)
-                anim.SetBool("InCombat", true);
-
-            if (canAttack)
+            if (playerHeading.sqrMagnitude < viewDistanceSquare)
             {
-                canAttack = false;
-                anim.SetTrigger("Attack");
-                StartCoroutine(ResetAttackCooldown());
+                aiState = AIState.Combat;
+                target = player.gameObject;
             }
         }
-        else if (playerDistance > 1.5f && playerDistance <= 5.0f
-                && ((isFlipped == false && playerDirection.x < 0) || (isFlipped && playerDirection.x > 0)))
+        else if (playerHeading.x < 0 && isFacingRight == false)
         {
-            if (anim.GetBool("InCombat"))
-                anim.SetBool("InCombat", false);
+            if (playerHeading.sqrMagnitude < viewDistanceSquare)
+            {
+                aiState = AIState.Combat;
+                target = player.gameObject;
+            }
+        }
+    }
 
-            isChasing = true;
-            //isHit = false;        
-            pathTarget = player.transform.position;
+    protected void NextTravelPoint(int idx = -1)
+    {
+        if (idx != -1)
+        {
+            travelTarget = pathPoints[idx].position;
+            return;
+        }
+
+        currentPathPointIdx++;
+        if (currentPathPointIdx >= pathPoints.Length)
+        {
+            currentPathPointIdx = 0;
+        }
+        travelTarget = pathPoints[currentPathPointIdx].position;
+    }
+
+    public virtual void Damage(int damageAmount)
+    {
+        if (aiState == AIState.Dead)
+        {
+            return;
+        }
+
+        animator.SetTrigger("Hit");
+
+        if (aiState != AIState.Combat)
+        {
+            target = player.gameObject; // need to get info who is damage dealer to set real target
+            aiState = AIState.Combat;
+        }
+
+        Debug.Log(this.name + " obtained " + damageAmount + " damage! Health: " + _health);
+        _health -= damageAmount;
+
+        if (_health < 1)
+        {
+            aiState = AIState.Dead;
+            StartCoroutine(Die());
+        }
+    }
+
+    protected void HeadTowardsTarget(Vector3 targetPosition)
+    {
+        Vector3 targetHeading = targetPosition - transform.position;
+
+        if (targetHeading.x > 0)
+        {
+            FaceRight(true);
         }
         else
         {
-            if (anim.GetBool("InCombat"))
-                anim.SetBool("InCombat", false);
-            
-            if(isChasing)
-            {            
-                isChasing = false;
-
-                float pointADist = Vector3.Distance(transform.position, pointA.position);
-                float pointBDist = Vector3.Distance(transform.position, pointB.position);
-
-                if (pointADist < pointBDist)
-                {
-                    pathTarget = pointA.position;
-                }
-                else
-                {
-                    pathTarget = pointB.position;
-                }  
-            }                       
-        }
-
-        if (playerDirection.x > 0 && isChasing)
-        {
-            FlipX(true);
-        }
-        else if (playerDirection.x < 0 && isChasing)
-        {
-            FlipX(false);
+            FaceRight(false);
         }
     }
 
-    public virtual void FlipX(bool flip)
+    protected void FaceRight(bool faceRight)
     {
-        if (flip)
+        if (faceRight)
         {
-            if (isFlipped == false)
+            if (isFacingRight == false)
             {
-                isFlipped = true;
+                isFacingRight = true;
                 sprite.transform.rotation = Quaternion.Euler(0, 180, 0);
                 sprite.transform.Translate(mainSpriteSize.x, 0, 0);
             }
         }
         else
         {
-            if (isFlipped)
+            if (isFacingRight)
             {
-                isFlipped = false;
+                isFacingRight = false;
                 sprite.transform.rotation = Quaternion.Euler(0, 0, 0);
                 sprite.transform.Translate(mainSpriteSize.x, 0, 0);
             }
         }
     }
 
-    IEnumerator ResetAttackCooldown()
+    protected virtual IEnumerator Die()
+    {
+        yield return new WaitForSeconds(0.2f);
+        if (isFacingRight == false)
+        {
+            sprite.transform.Translate(-mainSpriteSize.x / 2, 0, 0);
+        }
+        else
+        {
+            sprite.transform.Translate(-mainSpriteSize.x / 2, 0, 0);
+        }
+        animator.SetTrigger("Death");
+        Instantiate(dropPrefab, transform.position, Quaternion.identity);
+        StartCoroutine(VanishCorpse());
+    }
+
+    protected IEnumerator VanishCorpse()
+    {
+        yield return new WaitForSeconds(5.0f);
+        Destroy(this.gameObject);
+    }
+
+    protected IEnumerator ResetAttackCooldown()
     {
         yield return new WaitForSeconds(attackCooldown);
         canAttack = true;

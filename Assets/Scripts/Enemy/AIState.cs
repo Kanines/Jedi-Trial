@@ -1,0 +1,1 @@
+﻿public enum AIState { Guard, Combat, Dead };

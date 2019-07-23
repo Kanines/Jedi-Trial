@@ -2,54 +2,58 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tusken : Enemy, IDamageable
+public class Tusken : Enemy
 {
-    public int Health { get; set; }
-
     public override void Init()
     {
         base.Init();
-        Health = base.health;
+        attackCooldown = 1.0f;
     }
 
-    public void Damage(int damageAmount)
+    protected override void Chase()
     {
-        if (isDead)
-            return;
+        float playerDistanceSquare = playerHeading.sqrMagnitude;
 
-        isHit = true;
-        anim.SetTrigger("Hit");
-        anim.SetBool("InCombat", true);
+        HeadTowardsTarget(target.transform.position);
 
-        Debug.Log(this.name + " obtained " + damageAmount + " damage! Health: " + Health);
-        Health -= damageAmount;
-
-        if (Health < 1)
+        if (playerDistanceSquare < attackRangeSquare)
         {
-            isDead = true;
-            StartCoroutine(Death());
+            animator.SetBool("isMoving", false);
+            if (canAttack)
+            {
+                canAttack = false;
+                animator.SetTrigger("Attack");
+                StartCoroutine(ResetAttackCooldown());
+            }
         }
-    }
-
-    IEnumerator VanishCorpse()
-    {
-        yield return new WaitForSeconds(5.0f);
-        Destroy(this.gameObject);
-    }
-
-    IEnumerator Death()
-    {
-        yield return new WaitForSeconds(0.2f);
-        if (isFlipped == false)
+        else if (playerDistanceSquare < chaseDistanceSquare)
         {
-            sprite.transform.Translate(-mainSpriteSize.x / 2, 0, 0);
+            if (transform.position.x > pathPoints[0].position.x
+            && transform.position.x < pathPoints[pathPoints.Length - 1].position.x)
+            {
+                animator.SetBool("isMoving", true);
+
+                if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                {
+                    return;
+                }
+
+                travelTarget = player.transform.position;
+                travelTarget.y = transform.position.y;
+                transform.position = Vector3.MoveTowards(transform.position, travelTarget, speed * Time.deltaTime);
+            }
+            else
+            {
+                animator.SetBool("isMoving", false);
+                animator.SetTrigger("Idle");
+
+            }
         }
         else
         {
-            sprite.transform.Translate(-mainSpriteSize.x / 2, 0, 0);
+            animator.SetTrigger("Idle");
+            NextTravelPoint(currentPathPointIdx);
+            aiState = AIState.Guard;
         }
-        anim.SetTrigger("Death");
-        Instantiate(coinGoldPrefab, transform.position, Quaternion.identity);
-        StartCoroutine(VanishCorpse());
     }
 }
