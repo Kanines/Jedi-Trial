@@ -1,42 +1,40 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour, IDamageable
 {
     [SerializeField]
-    protected GameObject dropPrefab;
+    protected Transform[] pathPoints;
     [SerializeField]
-    private int _health;
+    protected float speed = 3.0f;
     [SerializeField]
-    protected int speed;
+    protected float viewDistance = 6.0f;
     [SerializeField]
-    protected int rewardPoints;
+    protected float chaseDistance = 8.0f;
+    [SerializeField]
+    protected float attackRange = 1.5f;
     [SerializeField]
     protected float attackCooldown = 1.5f;
-    [SerializeField]
-    protected int damage = 1;
-    [SerializeField]
-    protected Transform[] pathPoints;
     protected Animator animator;
-    protected SpriteRenderer sprite;
-    protected Vector3 mainSpriteSize;
-    protected bool isFacingRight = false;
     protected AIState aiState = AIState.Guard;
     protected Vector3 travelTarget;
-    protected Player player;
-    protected bool canAttack = true;
     protected int currentPathPointIdx;
     protected GameObject target;
     protected Vector3 playerHeading;
-    protected float playerDistance;
-    protected Vector3 playerDirection;
-    protected float viewDistance = 6.0f;
+    protected bool canAttack = true;
     protected float viewDistanceSquare;
-    protected float attackRange = 1.5f;
-    protected float attackRangeSquare;
-    protected float chaseDistance = 8.0f;
     protected float chaseDistanceSquare;
+    protected float attackRangeSquare;
+    [SerializeField]
+    private int _health;
+    [SerializeField]
+    private GameObject _dropPrefab;
+    [SerializeField]
+    private int _rewardPoints;
+    private SpriteRenderer _sprite;
+    private bool _isFacingRight = false;
+    private Vector3 _mainSpriteSize;
+    private Player _player;
 
     public int Health
     {
@@ -44,42 +42,19 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         set { _health = value; }
     }
 
-    private void Start()
+    void Start()
     {
         Init();
     }
 
-    public virtual void Init()
+    void Update()
     {
-        animator = GetComponentInChildren<Animator>();
-        sprite = GetComponentInChildren<SpriteRenderer>();
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        mainSpriteSize = sprite.sprite.bounds.size;
-
-        if (pathPoints.Length > 0)
-        {
-            currentPathPointIdx = 0;
-            travelTarget = pathPoints[currentPathPointIdx].position;
-        }
-
-        viewDistanceSquare = viewDistance * viewDistance;
-        attackRangeSquare = attackRange * attackRange;
-        chaseDistanceSquare = chaseDistance * chaseDistance;
-    }
-
-    public virtual void Update()
-    {
-        // if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-        // {
-        //     return;
-        // }
-
         if (aiState == AIState.Dead)
         {
             return;
         }
 
-        playerHeading = player.transform.position - transform.position;
+        playerHeading = _player.transform.position - transform.position;
 
         switch (aiState)
         {
@@ -92,6 +67,24 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         }
     }
 
+    protected virtual void Init()
+    {
+        animator = GetComponentInChildren<Animator>();
+        _sprite = GetComponentInChildren<SpriteRenderer>();
+        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        _mainSpriteSize = _sprite.sprite.bounds.size;
+
+        if (pathPoints.Length > 0)
+        {
+            currentPathPointIdx = 0;
+            travelTarget = pathPoints[currentPathPointIdx].position;
+        }
+
+        viewDistanceSquare = viewDistance * viewDistance;
+        attackRangeSquare = attackRange * attackRange;
+        chaseDistanceSquare = chaseDistance * chaseDistance;
+    }
+
     protected abstract void Chase();
 
     protected virtual void Roam()
@@ -100,7 +93,6 @@ public abstract class Enemy : MonoBehaviour, IDamageable
 
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
-
             return;
         }
 
@@ -116,21 +108,46 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         transform.position = Vector3.MoveTowards(transform.position, travelTarget, speed * Time.deltaTime);
 
         // check if enemy can see player
-        if (playerHeading.x > 0 && isFacingRight)
+        if (playerHeading.x > 0 && _isFacingRight)
         {
             if (playerHeading.sqrMagnitude < viewDistanceSquare)
             {
                 aiState = AIState.Combat;
-                target = player.gameObject;
+                target = _player.gameObject;
             }
         }
-        else if (playerHeading.x < 0 && isFacingRight == false)
+        else if (playerHeading.x < 0 && _isFacingRight == false)
         {
             if (playerHeading.sqrMagnitude < viewDistanceSquare)
             {
                 aiState = AIState.Combat;
-                target = player.gameObject;
+                target = _player.gameObject;
             }
+        }
+    }
+
+    public virtual void Damage(int damageAmount)
+    {
+        if (aiState == AIState.Dead)
+        {
+            return;
+        }
+
+        animator.SetTrigger("Hit");
+
+        if (aiState != AIState.Combat)
+        {
+            target = _player.gameObject; // need to get info who is damage dealer to set real target
+            aiState = AIState.Combat;
+        }
+
+        Debug.Log(this.name + " obtained " + damageAmount + " damage! Health: " + _health);
+        _health -= damageAmount;
+
+        if (_health < 1)
+        {
+            aiState = AIState.Dead;
+            StartCoroutine(Die());
         }
     }
 
@@ -148,31 +165,6 @@ public abstract class Enemy : MonoBehaviour, IDamageable
             currentPathPointIdx = 0;
         }
         travelTarget = pathPoints[currentPathPointIdx].position;
-    }
-
-    public virtual void Damage(int damageAmount)
-    {
-        if (aiState == AIState.Dead)
-        {
-            return;
-        }
-
-        animator.SetTrigger("Hit");
-
-        if (aiState != AIState.Combat)
-        {
-            target = player.gameObject; // need to get info who is damage dealer to set real target
-            aiState = AIState.Combat;
-        }
-
-        Debug.Log(this.name + " obtained " + damageAmount + " damage! Health: " + _health);
-        _health -= damageAmount;
-
-        if (_health < 1)
-        {
-            aiState = AIState.Dead;
-            StartCoroutine(Die());
-        }
     }
 
     protected void HeadTowardsTarget(Vector3 targetPosition)
@@ -193,20 +185,20 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     {
         if (faceRight)
         {
-            if (isFacingRight == false)
+            if (_isFacingRight == false)
             {
-                isFacingRight = true;
-                sprite.transform.rotation = Quaternion.Euler(0, 180, 0);
-                sprite.transform.Translate(mainSpriteSize.x, 0, 0);
+                _isFacingRight = true;
+                _sprite.transform.rotation = Quaternion.Euler(0, 180, 0);
+                _sprite.transform.Translate(_mainSpriteSize.x, 0, 0);
             }
         }
         else
         {
-            if (isFacingRight)
+            if (_isFacingRight)
             {
-                isFacingRight = false;
-                sprite.transform.rotation = Quaternion.Euler(0, 0, 0);
-                sprite.transform.Translate(mainSpriteSize.x, 0, 0);
+                _isFacingRight = false;
+                _sprite.transform.rotation = Quaternion.Euler(0, 0, 0);
+                _sprite.transform.Translate(_mainSpriteSize.x, 0, 0);
             }
         }
     }
@@ -214,16 +206,16 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     protected virtual IEnumerator Die()
     {
         yield return new WaitForSeconds(0.2f);
-        if (isFacingRight == false)
+        if (_isFacingRight == false)
         {
-            sprite.transform.Translate(-mainSpriteSize.x / 2, 0, 0);
+            _sprite.transform.Translate(-_mainSpriteSize.x / 2, 0, 0);
         }
         else
         {
-            sprite.transform.Translate(-mainSpriteSize.x / 2, 0, 0);
+            _sprite.transform.Translate(-_mainSpriteSize.x / 2, 0, 0);
         }
         animator.SetTrigger("Death");
-        Instantiate(dropPrefab, transform.position, Quaternion.identity);
+        Instantiate(_dropPrefab, transform.position, Quaternion.identity);
         StartCoroutine(VanishCorpse());
     }
 

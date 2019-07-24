@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Tusken : Enemy
 {
-    public override void Init()
+    protected override void Init()
     {
         base.Init();
         attackCooldown = 1.0f;
@@ -16,6 +14,7 @@ public class Tusken : Enemy
 
         HeadTowardsTarget(target.transform.position);
 
+        // target within attack range, attack him
         if (playerDistanceSquare < attackRangeSquare)
         {
             animator.SetBool("isMoving", false);
@@ -26,29 +25,43 @@ public class Tusken : Enemy
                 StartCoroutine(ResetAttackCooldown());
             }
         }
+        // target within chase range, chase him
         else if (playerDistanceSquare < chaseDistanceSquare)
         {
-            if (transform.position.x > pathPoints[0].position.x
-            && transform.position.x < pathPoints[pathPoints.Length - 1].position.x)
+            if (Utils.isNear(transform.position, travelTarget, 0.1f))
             {
-                animator.SetBool("isMoving", true);
-
-                if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-                {
-                    return;
-                }
-
-                travelTarget = player.transform.position;
-                travelTarget.y = transform.position.y;
-                transform.position = Vector3.MoveTowards(transform.position, travelTarget, speed * Time.deltaTime);
+                animator.SetBool("isMoving", false);
             }
             else
             {
-                animator.SetBool("isMoving", false);
-                animator.SetTrigger("Idle");
+                animator.SetBool("isMoving", true);
+            }
 
+            travelTarget = target.transform.position;
+            travelTarget.y = transform.position.y;
+
+            // don't move outside roam boundaries
+            if (travelTarget.x < pathPoints[0].position.x)
+            {
+                travelTarget.x = pathPoints[0].position.x;
+            }
+            else if (travelTarget.x > pathPoints[pathPoints.Length - 1].position.x)
+            {
+                travelTarget.x = pathPoints[pathPoints.Length - 1].position.x;
+            }
+
+            // don't move while in idle state
+            if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+            {
+                return;
+            }
+
+            if (animator.GetBool("isMoving"))
+            {
+                transform.position = Vector3.MoveTowards(transform.position, travelTarget, speed * Time.deltaTime);
             }
         }
+        // target too far, get back to roaming
         else
         {
             animator.SetTrigger("Idle");
