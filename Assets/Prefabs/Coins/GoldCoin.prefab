@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 186e47d19cc2a6b459fa7ca687bdf72d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scorePoints: 3
+  _scorePoints: 3
 --- !u!212 &5223785562359584086
 SpriteRenderer:
   m_ObjectHideFlags: 0

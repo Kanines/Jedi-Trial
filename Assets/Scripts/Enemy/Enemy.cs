@@ -4,9 +4,11 @@ using UnityEngine;
 public abstract class Enemy : MonoBehaviour, IDamageable
 {
     [SerializeField]
-    protected Transform[] pathPoints;
+    private int _health = 3;
     [SerializeField]
     protected float speed = 3.0f;
+    [SerializeField]
+    protected Transform[] pathPoints;
     [SerializeField]
     protected float viewDistance = 6.0f;
     [SerializeField]
@@ -25,13 +27,12 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     protected float viewDistanceSquare;
     protected float chaseDistanceSquare;
     protected float attackRangeSquare;
-    [SerializeField]
-    private int _health;
+    protected SpriteRenderer sprite;
+
     [SerializeField]
     private GameObject _dropPrefab;
     [SerializeField]
     private int _rewardPoints;
-    private SpriteRenderer _sprite;
     private bool _isFacingRight = false;
     private Vector3 _mainSpriteSize;
     private Player _player;
@@ -70,9 +71,9 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     protected virtual void Init()
     {
         animator = GetComponentInChildren<Animator>();
-        _sprite = GetComponentInChildren<SpriteRenderer>();
+        sprite = GetComponentInChildren<SpriteRenderer>();
         _player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        _mainSpriteSize = _sprite.sprite.bounds.size;
+        _mainSpriteSize = sprite.sprite.bounds.size;
 
         if (pathPoints.Length > 0)
         {
@@ -101,6 +102,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         if (Utils.isNear(transform.position, travelTarget))
         {
             NextTravelPoint();
+            animator.SetBool("isMoving", false);
             animator.SetTrigger("Idle");
         }
 
@@ -126,22 +128,23 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         }
     }
 
-    public virtual void Damage(int damageAmount)
+    public virtual void Damage(int damageAmount, GameObject damageSource)
     {
         if (aiState == AIState.Dead)
         {
             return;
         }
 
+        Debug.Log(gameObject.name + "[hp:" + _health + "] received " + damageAmount + " damage from " + damageSource.name);
+
         animator.SetTrigger("Hit");
 
         if (aiState != AIState.Combat)
         {
-            target = _player.gameObject; // need to get info who is damage dealer to set real target
+            target = damageSource;
             aiState = AIState.Combat;
         }
 
-        Debug.Log(this.name + " obtained " + damageAmount + " damage! Health: " + _health);
         _health -= damageAmount;
 
         if (_health < 1)
@@ -188,8 +191,8 @@ public abstract class Enemy : MonoBehaviour, IDamageable
             if (_isFacingRight == false)
             {
                 _isFacingRight = true;
-                _sprite.transform.rotation = Quaternion.Euler(0, 180, 0);
-                _sprite.transform.Translate(_mainSpriteSize.x, 0, 0);
+                sprite.transform.rotation = Quaternion.Euler(0, 180, 0);
+                sprite.transform.Translate(_mainSpriteSize.x, 0, 0);
             }
         }
         else
@@ -197,8 +200,8 @@ public abstract class Enemy : MonoBehaviour, IDamageable
             if (_isFacingRight)
             {
                 _isFacingRight = false;
-                _sprite.transform.rotation = Quaternion.Euler(0, 0, 0);
-                _sprite.transform.Translate(_mainSpriteSize.x, 0, 0);
+                sprite.transform.rotation = Quaternion.Euler(0, 0, 0);
+                sprite.transform.Translate(_mainSpriteSize.x, 0, 0);
             }
         }
     }
@@ -208,11 +211,11 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         yield return new WaitForSeconds(0.2f);
         if (_isFacingRight == false)
         {
-            _sprite.transform.Translate(-_mainSpriteSize.x / 2, 0, 0);
+            sprite.transform.Translate(-_mainSpriteSize.x / 2, 0, 0);
         }
         else
         {
-            _sprite.transform.Translate(-_mainSpriteSize.x / 2, 0, 0);
+            sprite.transform.Translate(-_mainSpriteSize.x / 2, 0, 0);
         }
         animator.SetTrigger("Death");
         Instantiate(_dropPrefab, transform.position, Quaternion.identity);
@@ -222,7 +225,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     protected IEnumerator VanishCorpse()
     {
         yield return new WaitForSeconds(5.0f);
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
 
     protected IEnumerator ResetAttackCooldown()

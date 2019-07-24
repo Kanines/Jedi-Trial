@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
-    public int scorePoints;
+    [SerializeField]
+    private int _scorePoints;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -13,7 +12,7 @@ public class Coin : MonoBehaviour
             Player player = other.GetComponent<Player>();
             if (player != null)
             {
-                player.AddScore(scorePoints);
+                player.AddScore(_scorePoints);
                 Destroy(this.gameObject);
             }
         }

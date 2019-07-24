@@ -1,11 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     private static UIManager _instance;
+    [SerializeField]
+    private Sprite _healthUnitSprite;
+    [SerializeField]
+    private Sprite _healthUnitMissingSprite;
+    [SerializeField]
+    private Image[] _healthBar;
+    [SerializeField]
+    private Text _scoreText;
+
     public static UIManager Instance
     {
         get
@@ -18,33 +25,28 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void Awake()
+    void Awake()
     {
         _instance = this;
     }
 
-    public Sprite healthUnitSprite;
-    public Sprite healthUnitMissingSprite;
-    public Image[] healthBar;
-    public Text scoreText;
-
     public void UpdateHealth(int remainingHealth)
     {
-        for (int i = 0; i < healthBar.Length; i++)
+        for (int i = 0; i < _healthBar.Length; i++)
         {
             if (i < remainingHealth)
             {
-                healthBar[i].sprite = healthUnitSprite;
+                _healthBar[i].sprite = _healthUnitSprite;
             }
             else
             {
-                healthBar[i].sprite = healthUnitMissingSprite;
+                _healthBar[i].sprite = _healthUnitMissingSprite;
             }
         }
     }
 
-    public void UpdateScore(int score)
+    public void UpdateScore(int newScore)
     {
-        scoreText.text = "" + score;
+        _scoreText.text = "" + newScore;
     }
 }

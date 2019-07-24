@@ -1,7 +1,27 @@
 ﻿using UnityEngine;
 
-public class Tusken : Enemy
+public class Tusken : Enemy, IDamageDealer
 {
+    [SerializeField]
+    private int _damageAmount = 1;
+
+    public int DamageAmount
+    {
+        get
+        {
+            return _damageAmount;
+        }
+        set
+        {
+            _damageAmount = value;
+        }
+    }
+
+    public GameObject DamageSource
+    {
+        get { return gameObject; }
+    }
+
     protected override void Init()
     {
         base.Init();
@@ -13,10 +33,10 @@ public class Tusken : Enemy
         float playerDistanceSquare = playerHeading.sqrMagnitude;
 
         HeadTowardsTarget(target.transform.position);
-
-        // target within attack range, attack him
+      
         if (playerDistanceSquare < attackRangeSquare)
         {
+            // target within attack range, attack him
             animator.SetBool("isMoving", false);
             if (canAttack)
             {
@@ -25,9 +45,9 @@ public class Tusken : Enemy
                 StartCoroutine(ResetAttackCooldown());
             }
         }
-        // target within chase range, chase him
         else if (playerDistanceSquare < chaseDistanceSquare)
         {
+            // target within chase range, chase him
             if (Utils.isNear(transform.position, travelTarget, 0.1f))
             {
                 animator.SetBool("isMoving", false);
@@ -61,9 +81,9 @@ public class Tusken : Enemy
                 transform.position = Vector3.MoveTowards(transform.position, travelTarget, speed * Time.deltaTime);
             }
         }
-        // target too far, get back to roaming
         else
         {
+            // target too far, get back to roaming
             animator.SetTrigger("Idle");
             NextTravelPoint(currentPathPointIdx);
             aiState = AIState.Guard;

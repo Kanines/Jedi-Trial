@@ -112,9 +112,9 @@ TextureImporter:
       name: Hit_0
       rect:
         serializedVersion: 2
-        x: 1
+        x: 2
         y: 1
-        width: 36
+        width: 35
         height: 48
       alignment: 8
       pivot: {x: 1, y: 0}

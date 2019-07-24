@@ -1,30 +1,59 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IDamageable
+public class Player : MonoBehaviour, IDamageable, IDamageDealer
 {
     public int score;
     [SerializeField]
     private int _health;
     [SerializeField]
+    private float _horizSpeed = 5.0f;
+    [SerializeField]
     private float _jumpForce = 5.0f;
     [SerializeField]
-    private float _horizSpeed = 5.0f;
-    private bool _resetJump = false;
-    private bool _isGrounded = false;
-    private bool _isBlocking = false;
+    private int _damageAmount = 1;
     private Rigidbody2D _rigid;
     private PlayerAnimation _playerAnim;
     private SpriteRenderer _sprite;
     private Vector3 _mainSpriteSize;
-    private Color _hitColor = new Color(1.0f, 0.7f, 0.1f, 1.0f);
+    private bool _resetJump = false;
+    private bool _isGrounded = false;
+    private bool _isBlocking = false;
     private bool _isDead = false;
-    private bool _isFlipped = false;
+    private bool _isFacingRight = true;
 
-    public int Health { get; set; }
+    public int Health
+    {
+        get
+        {
+            return _health;
+        }
+        set
+        {
+            _health = value;
+        }
+    }
 
-    // Start is called before the first frame update
+    public int DamageAmount
+    {
+        get
+        {
+            return _damageAmount;
+        }
+        set
+        {
+            _damageAmount = value;
+        }
+    }
+
+    public GameObject DamageSource
+    {
+        get
+        {
+            return gameObject;
+        }
+    }
+
     void Start()
     {
         _rigid = GetComponent<Rigidbody2D>();
@@ -34,21 +63,24 @@ public class Player : MonoBehaviour, IDamageable
         Health = _health;
     }
 
-    // Update is called once per frame
     void Update()
     {
         Debug.DrawRay(transform.position, Vector2.down * 1.05f, Color.red);
 
         if (_isDead)
+        {
             return;
+        }
 
         Movement();
 
+        // attack
         if (Input.GetMouseButtonDown(0) && IsGrounded())
         {
             _playerAnim.Attack();
         }
 
+        // block
         if (Input.GetMouseButtonDown(1) && IsGrounded() && !_isBlocking)
         {
             _playerAnim.Block(true);
@@ -61,7 +93,7 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-    void Movement()
+    private void Movement()
     {
         // Horizontal Movement
         float horizInput = Input.GetAxisRaw("Horizontal");
@@ -70,28 +102,29 @@ public class Player : MonoBehaviour, IDamageable
 
         if (horizInput > 0)
         {
-            if (_isFlipped)
+            if (_isFacingRight == false)
             {
-                _isFlipped = false;
+                _isFacingRight = true;
                 _sprite.transform.rotation = Quaternion.Euler(0, 0, 0);
                 _sprite.transform.Translate(-_mainSpriteSize.x, 0, 0);
             }
         }
         else if (horizInput < 0)
         {
-            if (_isFlipped == false)
+            if (_isFacingRight)
             {
-                _isFlipped = true;
+                _isFacingRight = false;
                 _sprite.transform.rotation = Quaternion.Euler(0, 180, 0);
                 _sprite.transform.Translate(-_mainSpriteSize.x, 0, 0);
             }
         }
+
         // Jump
         if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
         {
             _rigid.velocity = new Vector2(_rigid.velocity.x, _jumpForce);
-            StartCoroutine(ResetJumpRoutine());
             _playerAnim.Jump(true);
+            StartCoroutine(ResetJumpRoutine());
         }
 
         _rigid.velocity = new Vector2(horizInput * _horizSpeed, _rigid.velocity.y);
@@ -99,7 +132,41 @@ public class Player : MonoBehaviour, IDamageable
         _playerAnim.Move(horizInput);
     }
 
-    bool IsGrounded()
+    public void Damage(int damageAmount, GameObject damageSource)
+    {
+        if (_isDead)
+        {
+            return;
+        }
+
+        if (_isBlocking && isFacingTowardsTarget(damageSource.transform.position))
+        {
+            return;
+        }
+        else
+        {
+            Debug.Log(gameObject.name + "[hp:" + _health + "] received " + damageAmount + " damage from " + damageSource.name);
+
+            Health -= damageAmount;
+            UIManager.Instance.UpdateHealth(Health);
+            StartCoroutine(Utils.HitFxRoutine(_sprite));
+
+            if (Health < 1)
+            {
+                _isDead = true;
+                _sprite.transform.Translate(_mainSpriteSize.x / 2, 0, 0);
+                _playerAnim.Death();
+            }
+        }
+    }
+
+    public void AddScore(int scorePoints)
+    {
+        score += scorePoints;
+        UIManager.Instance.UpdateScore(score);
+    }
+
+    private bool IsGrounded()
     {
         RaycastHit2D hitInfo = Physics2D.Raycast(transform.position, Vector2.down, 1.05f, 1 << 8);
 
@@ -115,50 +182,24 @@ public class Player : MonoBehaviour, IDamageable
         return false;
     }
 
-    public void Damage(int damageAmount)
+    private bool isFacingTowardsTarget(Vector3 targetPosition)
     {
-        if (_isDead)
-            return;
+        Vector3 targetHeading = targetPosition - transform.position;
 
-        if (_isBlocking == false)
+        if (targetHeading.x > 0 && _isFacingRight)
         {
-            Debug.Log(this.name + " obtained " + damageAmount + " damage! Health: " + Health);
-            Health -= damageAmount;
-            UIManager.Instance.UpdateHealth(Health);
-            StartCoroutine(HitFxRoutine());
-
-            if (Health < 1)
-            {
-                _isDead = true;
-                if (_isFlipped == false)
-                {
-                    _sprite.transform.Translate(_mainSpriteSize.x / 2, 0, 0);
-                }
-                else
-                {
-                    _sprite.transform.Translate(_mainSpriteSize.x / 2, 0, 0);
-                }
-                _playerAnim.Death();
-            }
+            return true;
         }
+        else if (targetHeading.x < 0 && _isFacingRight == false)
+        {
+            return true;
+        }
+
+        return false;
     }
 
-    public void AddScore(int scorePoints)
+    private IEnumerator ResetJumpRoutine()
     {
-        score += scorePoints;
-        UIManager.Instance.UpdateScore(score);
-    }
-
-    IEnumerator HitFxRoutine()
-    {
-        _sprite.color = _hitColor;
-        yield return new WaitForSeconds(0.25f);
-        _sprite.color = Color.white;
-    }
-
-    IEnumerator ResetJumpRoutine()
-    {
-        _resetJump = true;
         yield return new WaitForSeconds(0.5f);
         _resetJump = false;
     }

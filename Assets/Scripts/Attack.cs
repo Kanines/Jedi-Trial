@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Attack : MonoBehaviour
@@ -9,12 +8,13 @@ public class Attack : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         //Debug.Log("Hit: " + other.name);
-        
+
         IDamageable hit = other.GetComponent<IDamageable>();
+        IDamageDealer dmg = gameObject.GetComponentInParent<IDamageDealer>();
 
         if (hit != null && _canDamage)
         {
-            hit.Damage(1);
+            hit.Damage(dmg.DamageAmount, dmg.DamageSource);
             _canDamage = false;
             StartCoroutine(ResetDamage());
         }
