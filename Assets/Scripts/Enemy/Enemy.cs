@@ -22,7 +22,6 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     protected Vector3 travelTarget;
     protected int currentPathPointIdx;
     protected GameObject target;
-    protected Vector3 playerHeading;
     protected bool canAttack = true;
     protected float viewDistanceSquare;
     protected float chaseDistanceSquare;
@@ -36,6 +35,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable
     private bool _isFacingRight = false;
     private Vector3 _mainSpriteSize;
     private Player _player;
+    private Vector3 _playerHeading;
 
     public int Health
     {
@@ -54,8 +54,6 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         {
             return;
         }
-
-        playerHeading = _player.transform.position - transform.position;
 
         switch (aiState)
         {
@@ -109,18 +107,20 @@ public abstract class Enemy : MonoBehaviour, IDamageable
         travelTarget.y = transform.position.y;
         transform.position = Vector3.MoveTowards(transform.position, travelTarget, speed * Time.deltaTime);
 
+        _playerHeading = _player.transform.position - transform.position;
+
         // check if enemy can see player
-        if (playerHeading.x > 0 && _isFacingRight)
+        if (_playerHeading.x > 0 && _isFacingRight)
         {
-            if (playerHeading.sqrMagnitude < viewDistanceSquare)
+            if (_playerHeading.sqrMagnitude < viewDistanceSquare)
             {
                 aiState = AIState.Combat;
                 target = _player.gameObject;
             }
         }
-        else if (playerHeading.x < 0 && _isFacingRight == false)
+        else if (_playerHeading.x < 0 && _isFacingRight == false)
         {
-            if (playerHeading.sqrMagnitude < viewDistanceSquare)
+            if (_playerHeading.sqrMagnitude < viewDistanceSquare)
             {
                 aiState = AIState.Combat;
                 target = _player.gameObject;

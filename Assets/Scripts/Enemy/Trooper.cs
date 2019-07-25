@@ -9,6 +9,8 @@ public class Trooper : Enemy
     [SerializeField]
     private Transform _firePoint;
     private float dangerRangeSquare;
+    private Vector3 targetHeading;
+    private bool canFlee = true;
 
     protected override void Init()
     {
@@ -18,17 +20,17 @@ public class Trooper : Enemy
 
     protected override void Chase()
     {
-        float playerDistanceSquare = playerHeading.sqrMagnitude;
+        targetHeading = target.transform.position - transform.position;
+        float targetDistanceSquare = targetHeading.sqrMagnitude;
 
-        if (playerDistanceSquare < dangerRangeSquare)
+        if (targetDistanceSquare < dangerRangeSquare)
         {
             // target withing danger range, kite him
 
             if (canAttack)
             {
-                HeadTowardsTarget(target.transform.position);
-
                 animator.SetBool("isMoving", false);
+                HeadTowardsTarget(target.transform.position);
                 canAttack = false;
                 animator.SetTrigger("Attack");
                 Shoot();
@@ -39,49 +41,53 @@ public class Trooper : Enemy
                 if (Utils.isNear(transform.position, travelTarget, 0.1f))
                 {
                     animator.SetBool("isMoving", false);
+                    canFlee = true;
                 }
                 else
                 {
                     animator.SetBool("isMoving", true);
                 }
 
-                travelTarget = transform.position;
-
-                //TODO fix kiting near roam boundaries
-                if (playerHeading.x > 0)
+                if (canFlee)
                 {
-                    travelTarget.x -= dangerRange;
+                    travelTarget = transform.position;
 
-                    if (travelTarget.x < pathPoints[0].position.x)
+                    if (targetHeading.x > 0)
                     {
-                        travelTarget = target.transform.position;
-                        travelTarget.x += dangerRange;
-                    }
-                }
-                else if (playerHeading.x < 0)
-                {
-                    travelTarget.x += dangerRange;
-                    if (travelTarget.x > pathPoints[pathPoints.Length - 1].position.x)
-                    {
-                        travelTarget = target.transform.position;
                         travelTarget.x -= dangerRange;
+
+                        if (travelTarget.x < pathPoints[0].position.x)
+                        {
+                            travelTarget = target.transform.position;
+                            travelTarget.x += dangerRange;
+                            canFlee = false;
+                        }
+                    }
+                    else if (targetHeading.x < 0)
+                    {
+                        travelTarget.x += dangerRange;
+                        if (travelTarget.x > pathPoints[pathPoints.Length - 1].position.x)
+                        {
+                            travelTarget = target.transform.position;
+                            travelTarget.x -= dangerRange;
+                            canFlee = false;
+                        }
                     }
                 }
 
-                HeadTowardsTarget(travelTarget);
-
-                // if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-                // {
-                //     return;
-                // }
+                if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+                {
+                    return;
+                }
 
                 if (animator.GetBool("isMoving"))
                 {
+                    HeadTowardsTarget(travelTarget);
                     transform.position = Vector3.MoveTowards(transform.position, travelTarget, speed * Time.deltaTime);
                 }
             }
         }
-        else if (playerDistanceSquare < attackRangeSquare)
+        else if (targetDistanceSquare < attackRangeSquare)
         {
             // target within attack range, attack him   
 
@@ -97,7 +103,7 @@ public class Trooper : Enemy
             }
 
         }
-        else if (playerDistanceSquare < chaseDistanceSquare)
+        else if (targetDistanceSquare < chaseDistanceSquare)
         {
             // target within chase range, chase him up to dangerRange
 
@@ -111,11 +117,11 @@ public class Trooper : Enemy
             }
 
             travelTarget = target.transform.position;
-            if (playerHeading.x > 0)
+            if (targetHeading.x > 0)
             {
                 travelTarget.x -= dangerRange;
             }
-            else if (playerHeading.x < 0)
+            else if (targetHeading.x < 0)
             {
                 travelTarget.x += dangerRange;
             }
@@ -150,6 +156,7 @@ public class Trooper : Enemy
             animator.SetTrigger("Idle");
             NextTravelPoint(currentPathPointIdx);
             aiState = AIState.Guard;
+            target = null;
         }
     }
 
@@ -164,17 +171,15 @@ public class Trooper : Enemy
 
     private void Shoot()
     {
-        //TODO bullet rotation
-
-        GameObject prefab = Instantiate(_bulletPrefab, _firePoint.position, _firePoint.rotation);
+        GameObject prefab = Instantiate(_bulletPrefab, _firePoint.position, Quaternion.identity);
         Bullet bullet = prefab.GetComponent<Bullet>();
 
-        //TODO refactor target & player directions etc
-        Vector3 targetDirection = target.transform.position - transform.position;
-        targetDirection.Normalize();
+        Vector3 targetHeadingNorm = targetHeading.normalized;
 
         bullet.DamageSource = gameObject;
-        bullet.Rigid.velocity = targetDirection * bullet.Speed;
-    }
+        bullet.Rigid.velocity = targetHeadingNorm * bullet.Speed;
 
+        float angle = Mathf.Atan2(bullet.Rigid.velocity.y, bullet.Rigid.velocity.x) * Mathf.Rad2Deg;
+        bullet.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+    }
 }

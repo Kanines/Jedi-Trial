@@ -4,6 +4,7 @@ public class Tusken : Enemy, IDamageDealer
 {
     [SerializeField]
     private int _damageAmount = 1;
+    private Vector3 targetHeading;
 
     public int DamageAmount
     {
@@ -30,11 +31,11 @@ public class Tusken : Enemy, IDamageDealer
 
     protected override void Chase()
     {
-        float playerDistanceSquare = playerHeading.sqrMagnitude;
+        float targetDistanceSquare = targetHeading.sqrMagnitude;
 
         HeadTowardsTarget(target.transform.position);
-      
-        if (playerDistanceSquare < attackRangeSquare)
+
+        if (targetDistanceSquare < attackRangeSquare)
         {
             // target within attack range, attack him
             animator.SetBool("isMoving", false);
@@ -45,7 +46,7 @@ public class Tusken : Enemy, IDamageDealer
                 StartCoroutine(ResetAttackCooldown());
             }
         }
-        else if (playerDistanceSquare < chaseDistanceSquare)
+        else if (targetDistanceSquare < chaseDistanceSquare)
         {
             // target within chase range, chase him
             if (Utils.isNear(transform.position, travelTarget, 0.1f))
@@ -87,6 +88,7 @@ public class Tusken : Enemy, IDamageDealer
             animator.SetTrigger("Idle");
             NextTravelPoint(currentPathPointIdx);
             aiState = AIState.Guard;
+            target = null;
         }
     }
 }
